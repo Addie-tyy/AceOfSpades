@@ -1,6 +1,6 @@
 # Financial Inculsion
 
-Project Demo Apk [Click Here](link-to-apk)
+Project prototype [Click Here](link-to-apk)
 
 ## Team Universal
 
