@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaya Community Forum</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #4e2c1e;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+        }
+
+        .forum-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .question-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .mentor-section {
+            background: #fdf5e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .mentor {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .mentor img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .mentor-name {
+            font-weight: bold;
+        }
+
+        .post-question {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-question textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            resize: none;
+        }
+
+        .post-question button {
+            padding: 10px;
+            background-color: #4e2c1e;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .post-question button:hover {
+            background-color: #3a2117;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">SWAYA - Automate to Empower</div>
+
+    <div class="forum-container">
+        <div id="questions-container"></div>
+
+        <div class="mentor-section">
+            <h4>Top Mentors</h4>
+            <div class="mentor">
+                <img src="https://via.placeholder.com/40" alt="Mentor">
+                <div class="mentor-name">Niharika Joshi</div>
+            </div>
+            <div class="mentor">
+                <img src="https://via.placeholder.com/40" alt="Mentor">
+                <div class="mentor-name">Sanjana Pandey</div>
+            </div>
+        </div>
+
+        <div class="post-question">
+            <textarea rows="4" placeholder="Type your question here..." id="new-question"></textarea>
+            <button onclick="postQuestion()">Post Question</button>
+        </div>
+    </div>
+
+    <script>
+        async function fetchQuestions() {
+            const response = await fetch('http://localhost:3000/api/questions');
+            const data = await response.json();
+            const container = document.getElementById('questions-container');
+            container.innerHTML = data.map(q => `<div class="question"><div class="question-title">${q.question}</div></div>`).join('');
+        }
+
+        async function postQuestion() {
+            const questionText = document.getElementById('new-question').value;
+            if (!questionText.trim()) {
+                alert('Please type a question before posting.');
+                return;
+            }
+
+            const response = await fetch('http://localhost:3000/api/questions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: questionText })
+            });
+
+            if (response.ok) {
+                alert('Your question has been posted!');
+                document.getElementById('new-question').value = '';
+                fetchQuestions();
+            } else {
+                alert('Failed to post your question.');
+            }
+        }
+
+        // Fetch existing questions on page load
+        fetchQuestions();
+    </script>
+</body>
+</html>
